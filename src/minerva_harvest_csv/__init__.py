@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from minerva_harvest_csv.parser import Parser
-
+from minerva_harvest_csv.parser_aireas import Parser
+import minerva_harvest_csv.abstractparser as abstractparser
 from minerva.harvest.plugin_api_trend import HarvestPluginTrend
 
 
