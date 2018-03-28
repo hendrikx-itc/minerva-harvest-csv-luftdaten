@@ -1,0 +1,32 @@
+{
+    "data_source": "load-data",
+    "granularity": "1 day",
+    "entity_type": "node",
+    "partition_size": 86400,
+    "parts": [
+        {
+            "name": "first",
+            "trends": [
+                {
+                    "name": "id",
+                    "data_type": "text"
+                },
+                {
+                    "name": "meas_date",
+                    "data_type": "timestamp with time zone",
+                    "config": {
+                        "format": "%Y-%m-%dT%H:%M:%SZ"
+                    }
+                },
+                {
+                    "name": "name",
+                    "data_type": "text"
+                },
+                {
+                    "name": "weight",
+                    "data_type": "integer"
+                }
+            ]
+        }
+    ]
+}
