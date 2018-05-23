@@ -1,4 +1,4 @@
-import parser_aireas as parser
+import parser_luftdaten as parser
 import unittest
 import io
 import datetime
@@ -7,7 +7,7 @@ class ParserTest(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
-        cls.data = open("../../test_data/measurements-2018-03-06.csv")
+        cls.data = open("../../test_data/2018-01-01_bme280_sensor_113.csv")
         
     def setUp(self):
         self.parser = parser.Parser(None)

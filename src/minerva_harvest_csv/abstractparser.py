@@ -10,16 +10,17 @@ class CsvParser(HarvestParserTrend):
     def __init__(self, config):
         self.config = config
         # the following can (in the case of idvar and datavars: should) be overwritten in the setup of child classes
-        self.idvar = None # name on the csv for the ident
-        self.idname = "ident" # name for Minerva of the ident
+        self.idvar = None # name on the csv for the name
+        self.idname = "ident" # name for Minerva of the entity type
         self.datavars = {} # name on the csv to trendname
         self.changedata = {} # function to apply to the data
         self.datevar = None # name of the variable that contains the date
-        self.timeformat = "%Y-%m-%d %X" # datetime format used
+        self.timeformats = ["%Y-%m-%d %X"] # datetime format used, if more than one specified they are tried in sequence
         self.timeshift = datetime.timedelta(0) # by how much should the date be changed
         self.delimiter = ";"
         self.quotechar = '"'
         self.startstring = None # if this has a value, the first line is considered to be the one following the one that contains this string (as a field by itself)
+        self.allowempty = [] # data fields that are allowed to be empty. Please include only string fields
         self.setup()
 
     def setup(self):
@@ -41,7 +42,7 @@ class CsvParser(HarvestParserTrend):
         for measurement in csvreader:
             if not self.active:
                 # we are not yet in the part of the csv we have to look at
-                self.active = self.startstring in measurement
+                self.active = self.startstring in measurementx
             elif not header:
                 # first line, containing the header information
                 header = measurement
@@ -53,8 +54,18 @@ class CsvParser(HarvestParserTrend):
                 
                 for (datatype, value) in zip(header, measurement):
                     value = self.changeddata(datatype, value)
+                    if value == '' and datatype not in self.allowempty:
+                        value = None
+                    if value == '': value = None
                     if datatype == self.datevar:
-                        timestamp = datetime.datetime.strptime(value, self.timeformat) + self.timeshift
+                        for format in self.timeformats:
+                            try:
+                                timestamp = datetime.datetime.strptime(value, format) + self.timeshift
+                                break
+                            except ValueError:
+                                continue
+                        else:
+                            raise ValueError("No applicable timeformat")
                     elif datatype == self.idvar:
                         rowname = value
                     elif datatype in self.datavars:

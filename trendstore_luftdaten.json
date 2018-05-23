@@ -1,0 +1,53 @@
+{
+    "data_source": "luftdaten",
+    "entity_type": "airbox",
+    "granularity": "1 day",
+    "partition_size": "86400",
+    "parts": [
+        {
+            "name": "luftdaten",
+            "trends": [
+                {
+                    "name": "P1",
+                    "data_type": "double precision"
+                },
+                {
+                    "name": "durP1",
+                    "data_type": "double precision"
+                },
+                {
+                    "name": "ratioP1",
+                    "data_type": "double precision"
+                },
+                {
+                    "name": "P2",
+                    "data_type": "double precision"
+                },
+                {
+                    "name": "durP2",
+                    "data_type": "double precision"
+                },
+                {
+                    "name": "ratioP2",
+                    "data_type": "double precision"
+                },
+                {
+                    "name": "location",
+                    "data_type": "integer"
+                },
+                {
+                    "name": "lat",
+                    "data_type": "double precision"
+                },
+                {
+                    "name": "lon",
+                    "data_type": "double precision"
+                },
+                {
+                    "name": "sensor_type",
+                    "data_type": "text"
+                }
+            ]
+        }
+    ]
+}
