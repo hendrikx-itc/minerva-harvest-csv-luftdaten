@@ -2,8 +2,11 @@ import datetime
 import csv
 
 from minerva.harvest.plugin_api_trend import HarvestParserTrend
-from minerva.storage.trend.datapackage import DataPackage
+from minerva.storage.trend.datapackage import DataPackage, DataPackageType
 from minerva.storage.trend.granularity import create_granularity
+from minerva.directory.helpers import dns_to_entity_ids
+from minerva.directory.distinguishedname import entity_type_name_from_dn
+
 
 class CsvParser(HarvestParserTrend):
     # abstract class for creating data from csv
@@ -84,11 +87,30 @@ class CsvParser(HarvestParserTrend):
 
         trend_names = [self.datavars[name] for name in [name for name in header if name in self.datavars]]
 
+        package_type = DataPackageType(DnRef(), entity_type_name_from_dn)
+
         for timestamp, rows in rows_by_timestamp.items():
             print("{}: {}".format(timestamp, rows))
-            yield DefaultPackage(
+            yield DataPackage(
+                package_type,
                 create_granularity('1 day'),
                 timestamp,
                 trend_names,
                 rows
             )
+
+
+class DnRef:
+    def map_to_entity_ids(self, dns):
+        def map_to(cursor):
+            return dns_to_entity_ids(cursor, dns)
+
+        return map_to
+
+
+def entity_type_from_dn(data_package):
+    first_row = data_package.rows[0]
+
+    dn, timestamp, values = first_row
+
+    return entity_type_name_from_dn(dn)
