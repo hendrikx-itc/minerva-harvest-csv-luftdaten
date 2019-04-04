@@ -1,7 +1,4 @@
-try:
-    from minerva_harvest_csv.abstractparser import CsvParser
-except ModuleNotFoundError:
-    from abstractparser import CsvParser
+from minerva_harvest_csv_luftdaten.abstractparser import CsvParser
 
 class Parser(CsvParser):
     def setup(self):

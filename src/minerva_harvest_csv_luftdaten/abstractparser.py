@@ -2,7 +2,7 @@ import datetime
 import csv
 
 from minerva.harvest.plugin_api_trend import HarvestParserTrend
-from minerva.storage.trend.datapackage import DefaultPackage
+from minerva.storage.trend.datapackage import DataPackage
 from minerva.storage.trend.granularity import create_granularity
 
 class CsvParser(HarvestParserTrend):
@@ -33,7 +33,7 @@ class CsvParser(HarvestParserTrend):
             return str(self.changedata[datavar](value))
         else:
             return value
-        
+
     def load_packages(self, stream, name):
         csvreader = csv.reader(stream, delimiter = self.delimiter, quotechar = self.quotechar)
         rows_by_timestamp = {}
@@ -51,7 +51,7 @@ class CsvParser(HarvestParserTrend):
                 rowname = None
                 timestamp = None
                 trend_row = []
-                
+
                 for (datatype, value) in zip(header, measurement):
                     value = self.changeddata(datatype, value)
                     if value == '' and datatype not in self.allowempty:
@@ -73,7 +73,7 @@ class CsvParser(HarvestParserTrend):
                 if not rowname and timestamp:
                     # insufficient data to create a datarow
                     continue
-                
+
                 rows = rows_by_timestamp.get(timestamp)
                 if not rows:
                     rows = []
@@ -81,9 +81,9 @@ class CsvParser(HarvestParserTrend):
 
                 row_ident = '{}={}'.format(self.idname, rowname)
                 rows.append((row_ident, trend_row))
-                
+
         trend_names = [self.datavars[name] for name in [name for name in header if name in self.datavars]]
-    
+
         for timestamp, rows in rows_by_timestamp.items():
             print("{}: {}".format(timestamp, rows))
             yield DefaultPackage(
